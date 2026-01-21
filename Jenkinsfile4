@@ -20,7 +20,7 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 deploy adapters: [tomcat9(
-                    credentialsId: 'tomcat',
+                    credentialsId: 'cafbdffc-7ee9-4508-9c8c-a5f863b43c40',
                     path: '',
                     url: 'http://3.238.142.159:8080'
                 )],
@@ -36,7 +36,7 @@ pipeline {
                 }
 
                 deploy adapters: [tomcat9(
-                    credentialsId: 'tomcat',
+                    credentialsId: 'cafbdffc-7ee9-4508-9c8c-a5f863b43c40',
                     path: '',
                     url: 'http://18.212.217.8:8080'
                 )],
