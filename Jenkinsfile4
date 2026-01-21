@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven-3.9.12'
+    }
+
+    stages {
+        stage('Build Application') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/mehmet-dev-263/java-tomcat-sample.git'
+
+                sh 'mvn clean package'
+
+                archiveArtifacts artifacts: '**/*.war'
+            }
+        }
+
+        stage('Deploy to Staging') {
+            steps {
+                deploy adapters: [tomcat9(
+                    credentialsId: 'tomcat',
+                    path: '',
+                    url: 'http://3.238.142.159:8080'
+                )],
+                contextPath: '/',
+                war: '**/*.war'
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                timeout(time: 5, unit: 'DAYS') {
+                    input message: 'Approve PRODUCTION Deployment?'
+                }
+
+                deploy adapters: [tomcat9(
+                    credentialsId: 'tomcat',
+                    path: '',
+                    url: 'http://18.212.217.8:8080'
+                )],
+                contextPath: '/',
+                war: '**/*.war'
+            }
+        }
+    }
+}
